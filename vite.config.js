@@ -5,4 +5,7 @@ export default defineConfig({
   plugins: [react()],
   root: "src",
   resolve: { alias: { $lib: "src/lib" } },
+  test: {
+    environment: "happy-dom",
+  },
 });
