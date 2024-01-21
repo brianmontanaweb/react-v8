@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
-import { Animal } from "../models/APIResponses.types";
+import { Animal } from "../../models/APIResponses.types";
 
-interface IProps {
+export interface IProps {
   id: number;
   animal: Animal;
   breed: string;
-  images: string[];
+  images?: string[];
   location: string;
   name: string;
 }
@@ -13,7 +13,7 @@ interface IProps {
 const PetInfo = (props: IProps) => {
   const { name, animal, breed, images, location, id } = props;
   let heroImageUrl = "http://pets-images.dev-apis.com/pets/none.jpg";
-  if (images.length) {
+  if (images?.length) {
     heroImageUrl = images[0];
   }
 
@@ -27,7 +27,14 @@ const PetInfo = (props: IProps) => {
           width: "100%",
           paddingTop: "100%",
         }}
-      />
+      >
+        <img
+          src={heroImageUrl}
+          data-testid="thumbnail"
+          className="hidden"
+          alt=""
+        />
+      </div>
       <div className="absolute bottom-0 left-0 bg-gradient-to-tr from-white to-transparent pr-2 pt-2 font-bold">
         <h1>{name}</h1>
         <h2>

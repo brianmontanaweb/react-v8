@@ -17,7 +17,7 @@ const Carousel = ({
 
   return (
     <div className="carousel">
-      <img className="image" src={images[active]} alt="" />
+      <img className="image" data-testid="hero" src={images[active]} alt="" />
       <div className="carousel-smaller">
         {images.map((image, index) => (
           <button
@@ -25,6 +25,7 @@ const Carousel = ({
             onClick={handleImageClick}
             key={image}
             data-index={index}
+            data-testid={`thumbnail${index}`}
           >
             <img src={image} alt="Animal Thumbnail" />
           </button>
