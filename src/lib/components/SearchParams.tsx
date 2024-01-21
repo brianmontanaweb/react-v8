@@ -1,19 +1,20 @@
-import { useContext, useState } from "react";
+import { FormEvent, useContext, useState } from "react";
 import useBreedList from "../queries/useBreedList";
 import Results from "./Results";
 import fetchSearch from "../api/fetchSearch";
 import { useQuery } from "@tanstack/react-query";
 import AdoptedPetContext from "../hooks/AdoptedPetContext";
+import { Animal, ResultRequestParams } from "../models/APIResponses.types";
 
-const ANIMALS = ["bird", "cat", "dog", "rabbit", "reptile"];
+const ANIMALS: Animal[] = ["bird", "cat", "dog", "rabbit", "reptile"];
 
 const SearchParams = () => {
   const [requestParams, setRequestParams] = useState({
     location: "",
-    animal: "",
+    animal: "" as Animal,
     breed: "",
   });
-  const [animal, setAnimal] = useState("");
+  const [animal, setAnimal] = useState("" as Animal);
   const [breeds] = useBreedList(animal);
   const [adoptedPet] = useContext(AdoptedPetContext);
 
@@ -23,21 +24,24 @@ const SearchParams = () => {
   });
   const pets = results?.data?.pets ?? [];
 
+  const formSubmitHandler = (event: FormEvent) => {
+    event.preventDefault();
+    if (!(event.currentTarget instanceof HTMLFormElement)) return;
+    const formData = new FormData(event.currentTarget);
+
+    const formDataToRequestParams: ResultRequestParams = {
+      animal: (formData.get("animal")?.toString() ?? "") as Animal,
+      breed: formData.get("breed")?.toString() ?? "",
+      location: formData.get("location")?.toString() ?? "",
+    };
+    setRequestParams(formDataToRequestParams);
+  };
+
   return (
     <div className="mx-auto my-0 w-11/12">
       <form
         className="mb-10 flex flex-col items-center justify-center gap-4 rounded-lg bg-gray-200 p-10 shadow-lg"
-        onSubmit={(event) => {
-          event.preventDefault();
-          const formData = new FormData(event.target);
-
-          const formDataToRequestParams = {
-            animal: formData.get("animal") ?? "",
-            breed: formData.get("breed") ?? "",
-            location: formData.get("location") ?? "",
-          };
-          setRequestParams(formDataToRequestParams);
-        }}
+        onSubmit={formSubmitHandler}
       >
         {adoptedPet ? (
           <div className="pet image-container">
@@ -60,7 +64,7 @@ const SearchParams = () => {
             id="animal"
             value={animal}
             onChange={(event) => {
-              setAnimal(event.target.value);
+              setAnimal(event.target.value as Animal);
             }}
             className="search-input grayed-out-disabled"
           >

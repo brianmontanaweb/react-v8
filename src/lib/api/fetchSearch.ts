@@ -1,4 +1,13 @@
-async function fetchSearch({ queryKey }) {
+import { QueryFunction } from "@tanstack/react-query";
+import {
+  PetAPIResponse,
+  ResultRequestParams,
+} from "../models/APIResponses.types";
+
+const fetchSearch: QueryFunction<
+  PetAPIResponse,
+  ["search", ResultRequestParams]
+> = async ({ queryKey }) => {
   const { animal, location, breed } = queryKey[1];
 
   const res = await fetch(
@@ -8,6 +17,6 @@ async function fetchSearch({ queryKey }) {
   if (!res.ok) throw new Error("pet search failed");
 
   return res.json();
-}
+};
 
 export default fetchSearch;

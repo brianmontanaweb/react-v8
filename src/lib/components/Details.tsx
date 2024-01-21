@@ -6,10 +6,17 @@ import Carousel from "./Carousel";
 import ErrorBoundary from "./ErrorBoundary";
 import Modal from "./Modal";
 import AdoptedPetContext from "../hooks/AdoptedPetContext";
+import { PetAPIResponse } from "../models/APIResponses.types";
 
 const Details = () => {
   const { id } = useParams();
-  const results = useQuery({ queryKey: ["details", id], queryFn: fetchPet });
+
+  if (!id) throw new Error(`No valid ID: ${id}`);
+
+  const results = useQuery({
+    queryKey: ["details", id],
+    queryFn: fetchPet,
+  });
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
   const [_, setAdoptedPet] = useContext(AdoptedPetContext);
@@ -22,7 +29,9 @@ const Details = () => {
     );
   }
 
-  const pet = results.data.pets[0];
+  const pet = results?.data?.pets[0];
+
+  if (!pet) throw new Error(`Pet is not valid for id: ${id}`);
 
   return (
     <div className="details">
@@ -32,7 +41,9 @@ const Details = () => {
         <h2>
           {pet.animal} - {pet.breed} - {pet.city}, {pet.state}
         </h2>
-        <button onClick={() => setShowModal(true)}>Adopt {pet.name}</button>
+        <button className="btn-primary" onClick={() => setShowModal(true)}>
+          Adopt {pet.name}
+        </button>
         <p>{pet.description}</p>
         {showModal ? (
           <Modal>
@@ -40,6 +51,7 @@ const Details = () => {
               <h1>Would you like to adopt {pet.name}</h1>
               <div className="buttons">
                 <button
+                  className="btn-primary"
                   onClick={() => {
                     setAdoptedPet(pet);
                     navigate("/");
@@ -47,7 +59,12 @@ const Details = () => {
                 >
                   Yes
                 </button>
-                <button onClick={() => setShowModal(false)}>No</button>
+                <button
+                  className="btn-primary"
+                  onClick={() => setShowModal(false)}
+                >
+                  No
+                </button>
               </div>
             </div>
           </Modal>
@@ -57,9 +74,9 @@ const Details = () => {
   );
 };
 
-const DetailsWithErrorBoundary = (props) => (
+const DetailsWithErrorBoundary = () => (
   <ErrorBoundary>
-    <Details {...props} />
+    <Details />
   </ErrorBoundary>
 );
 
