@@ -1,11 +1,11 @@
 import { useState, useContext } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useParams, useNavigate } from "react-router";
-import fetchPet from "./fetchPet";
+import fetchPet from "../api/fetchPet";
 import Carousel from "./Carousel";
 import ErrorBoundary from "./ErrorBoundary";
 import Modal from "./Modal";
-import AdoptedPetContext from "./AdoptedPetContext";
+import AdoptedPetContext from "../hooks/AdoptedPetContext";
 
 const Details = () => {
   const { id } = useParams();
