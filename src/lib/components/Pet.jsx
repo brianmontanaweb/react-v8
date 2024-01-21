@@ -7,11 +7,17 @@ const Pet = ({ name, animal, breed, images, location, id }) => {
   }
 
   return (
-    <Link to={`/details/${id}`} className="pet">
-      <div className="image-container">
-        <img src={heroImageUrl} alt={name} />
-      </div>
-      <div className="info">
+    <Link to={`/details/${id}`} className="relative block">
+      <div
+        style={{
+          backgroundImage: `url(${heroImageUrl})`,
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "cover",
+          width: "100%",
+          paddingTop: "100%",
+        }}
+      />
+      <div className="absolute bottom-0 left-0 bg-gradient-to-tr from-white to-transparent pr-2 pt-2 font-bold">
         <h1>{name}</h1>
         <h2>
           {animal} - {breed} - {location}
